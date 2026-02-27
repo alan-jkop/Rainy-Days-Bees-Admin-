@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rainy Day Bees — Shopify Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  /* Shopify Polaris tokens */
+  --p-color-bg: #F1F1F1;
+  --p-color-bg-surface: #FFFFFF;
+  --p-color-bg-surface-hover: #F6F6F7;
+  --p-color-bg-surface-active: #F1F1F1;
+  --p-color-bg-surface-secondary: #F6F6F7;
+  --p-color-bg-fill-brand: #008060;
+  --p-color-bg-fill-brand-hover: #006e52;
+  --p-color-bg-fill-critical: #E51C00;
+  --p-color-bg-fill-critical-hover: #CC1900;
+  --p-color-bg-fill-success: #008060;
+  --p-color-bg-fill-warning: #B98900;
+  --p-color-bg-fill-info: #2C6ECB;
+  --p-color-bg-surface-info: #EBF5FA;
+  --p-color-bg-surface-success: #F1F8F5;
+  --p-color-bg-surface-warning: #FFF5EA;
+  --p-color-bg-surface-critical: #FFF4F4;
+  --p-color-bg-surface-brand: #F4FBF8;
+  --p-color-bg-surface-selected: #F2F7FE;
+  --p-color-text: #303030;
+  --p-color-text-secondary: #616161;
+  --p-color-text-disabled: #8C9196;
+  --p-color-text-brand: #008060;
+  --p-color-text-critical: #D72C0D;
+  --p-color-text-warning: #916A00;
+  --p-color-text-success: #008060;
+  --p-color-text-info: #2C6ECB;
+  --p-color-text-inverse: #FFFFFF;
+  --p-color-border: #E1E3E5;
+  --p-color-border-hover: #C9CCCF;
+  --p-color-border-brand: #008060;
+  --p-color-border-critical: #E51C00;
+  --p-color-border-info: #A4D4F4;
+  --p-color-icon: #5C5F62;
+  --p-color-icon-brand: #008060;
+  --p-color-icon-critical: #D72C0D;
+  --p-shadow-100: 0 1px 0 0 rgba(0,0,0,.05);
+  --p-shadow-200: 0 1px 2px 0 rgba(0,0,0,.07);
+  --p-shadow-300: 0 2px 8px -2px rgba(0,0,0,.12);
+  --p-shadow-card: 0 0 0 1px rgba(63,63,68,.05), 0 1px 3px 0 rgba(63,63,68,.15);
+  --p-radius-100: 4px;
+  --p-radius-200: 8px;
+  --p-radius-300: 12px;
+  --p-radius-full: 9999px;
+  --p-space-100: 4px;
+  --p-space-200: 8px;
+  --p-space-300: 12px;
+  --p-space-400: 16px;
+  --p-space-500: 20px;
+  --p-space-600: 24px;
+  --p-space-800: 32px;
+  --p-font: 'Inter', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, sans-serif;
+  --shopify-sidebar-w: 240px;
+  --app-sidebar-w: 200px;
+  --topbar-h: 56px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--p-font); font-size: 13px; color: var(--p-color-text); background: var(--p-color-bg); line-height: 1.5; overflow: hidden; height: 100vh; -webkit-font-smoothing: antialiased; }
+button { font-family: var(--p-font); cursor: pointer; border: none; background: none; font-size: 13px; }
+a { color: var(--p-color-text-info); text-decoration: none; }
+a:hover { text-decoration: underline; }
+input, textarea, select { font-family: var(--p-font); font-size: 13px; }
+
+/* TOPBAR */
+.topbar { height: var(--topbar-h); background: #1A1A1A; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; position: fixed; top: 0; left: 0; right: 0; z-index: 30; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.topbar-logo { display: flex; align-items: center; }
+.topbar-logo svg { width: 28px; height: 28px; fill: #95BF47; }
+.topbar-search { width: 420px; height: 32px; background: #303030; border: 1px solid #505050; border-radius: var(--p-radius-200); display: flex; align-items: center; gap: 8px; padding: 0 12px; color: #999; font-size: 13px; cursor: pointer; }
+.topbar-search .material-symbols-outlined { font-size: 18px; }
+.topbar-search kbd { background: #505050; padding: 1px 5px; border-radius: 3px; font-size: 10px; font-family: var(--p-font); color: #999; margin-left: auto; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-btn { width: 32px; height: 32px; border-radius: var(--p-radius-200); display: flex; align-items: center; justify-content: center; color: #B5B5B5; transition: background .1s; position: relative; }
+.topbar-btn:hover { background: #303030; }
+.topbar-btn .material-symbols-outlined { font-size: 20px; }
+.topbar-btn .notif-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #E51C00; border-radius: 50%; border: 2px solid #1A1A1A; }
+.topbar-user { display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: var(--p-radius-200); cursor: pointer; }
+.topbar-user:hover { background: #303030; }
+.topbar-user-avatar { width: 28px; height: 28px; border-radius: var(--p-radius-100); background: #C17A15; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+.topbar-user-name { font-size: 12px; color: #D0D0D0; font-weight: 500; }
+
+/* LAYOUT */
+.layout { display: flex; height: calc(100vh - var(--topbar-h)); margin-top: var(--topbar-h); }
+
+/* SHOPIFY SIDEBAR */
+.shopify-sidebar { width: var(--shopify-sidebar-w); background: #F6F6F7; border-right: 1px solid var(--p-color-border); overflow-y: auto; flex-shrink: 0; }
+.ss-item { display: flex; align-items: center; gap: 8px; padding: 6px 12px; margin: 1px 8px; border-radius: var(--p-radius-200); font-size: 13px; color: var(--p-color-text); font-weight: 450; cursor: pointer; transition: background .1s; }
+.ss-item:hover { background: #E3E3E3; }
+.ss-item .material-symbols-outlined { font-size: 20px; color: var(--p-color-icon); }
+.ss-item .count { margin-left: auto; background: #E4E5E7; border-radius: var(--p-radius-full); padding: 0 7px; font-size: 11px; font-weight: 600; height: 20px; display: flex; align-items: center; }
+.ss-section { padding: 12px 12px 4px; font-size: 12px; font-weight: 600; color: var(--p-color-text-secondary); display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.ss-section .material-symbols-outlined { font-size: 16px; }
+.ss-divider { height: 1px; background: var(--p-color-border); margin: 8px 12px; }
+.ss-item.app-active { background: #E0F0EA; color: var(--p-color-text-brand); font-weight: 550; }
+.ss-item.app-active .material-symbols-outlined { color: var(--p-color-icon-brand); }
+
+/* APP SUB-NAV */
+.app-subnav { width: var(--app-sidebar-w); background: var(--p-color-bg-surface); border-right: 1px solid var(--p-color-border); overflow-y: auto; flex-shrink: 0; padding: 8px 0; }
+.asn-header { padding: 12px 16px 8px; display: flex; align-items: center; gap: 8px; }
+.asn-icon { width: 24px; height: 24px; background: var(--p-color-bg-fill-brand); border-radius: var(--p-radius-100); display: flex; align-items: center; justify-content: center; }
+.asn-icon .material-symbols-outlined { font-size: 14px; color: #fff; }
+.asn-title { font-size: 14px; font-weight: 650; }
+.asn-item { display: flex; align-items: center; gap: 8px; padding: 7px 16px; font-size: 13px; color: var(--p-color-text-secondary); font-weight: 450; cursor: pointer; transition: all .1s; border-left: 3px solid transparent; }
+.asn-item:hover { background: var(--p-color-bg-surface-hover); color: var(--p-color-text); }
+.asn-item.active { background: var(--p-color-bg-surface-selected); color: var(--p-color-text); font-weight: 550; border-left-color: var(--p-color-bg-fill-brand); }
+.asn-item .material-symbols-outlined { font-size: 18px; }
+.asn-item .badge { margin-left: auto; background: var(--p-color-bg-fill-brand); color: #fff; border-radius: var(--p-radius-full); padding: 0 6px; font-size: 10px; font-weight: 700; height: 18px; display: flex; align-items: center; }
+.asn-section { padding: 16px 16px 4px; font-size: 10px; font-weight: 700; color: var(--p-color-text-disabled); text-transform: uppercase; letter-spacing: .8px; }
+
+/* MAIN */
+.main-area { flex: 1; overflow-y: auto; padding: 0; background: var(--p-color-bg); }
+.page-frame { max-width: 1000px; margin: 0 auto; padding: 20px 24px 40px; }
+.page-view { display: none; }
+.page-view.active { display: block; }
+
+/* POLARIS PAGE HEADER */
+.p-page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 16px; }
+.p-page-title { font-size: 20px; font-weight: 650; letter-spacing: -.3px; line-height: 1.3; }
+.p-page-subtitle { font-size: 13px; color: var(--p-color-text-secondary); margin-top: 2px; }
+.p-page-back { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--p-color-text-secondary); margin-bottom: 4px; cursor: pointer; }
+.p-page-back:hover { color: var(--p-color-text); text-decoration: underline; }
+.p-page-back .material-symbols-outlined { font-size: 18px; }
+.p-page-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* POLARIS CARD */
+.p-card { background: var(--p-color-bg-surface); border-radius: var(--p-radius-300); box-shadow: var(--p-shadow-card); overflow: hidden; margin-bottom: 16px; }
+.p-card-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; }
+.p-card-title { font-size: 13px; font-weight: 650; }
+.p-card-body { padding: 0 20px 16px; }
+.p-card-section { padding: 16px 20px; border-top: 1px solid var(--p-color-border); }
+.p-card-section:first-child { border-top: none; }
+.p-card-section-title { font-size: 13px; font-weight: 650; margin-bottom: 12px; }
+
+/* POLARIS BUTTONS */
+.p-btn { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 12px; border-radius: var(--p-radius-200); font-size: 13px; font-weight: 550; transition: all .15s; border: 1px solid transparent; white-space: nowrap; }
+.p-btn .material-symbols-outlined { font-size: 16px; }
+.p-btn-primary { background: var(--p-color-bg-fill-brand); color: #fff; }
+.p-btn-primary:hover { background: var(--p-color-bg-fill-brand-hover); }
+.p-btn-default { background: var(--p-color-bg-surface); border-color: var(--p-color-border); color: var(--p-color-text); box-shadow: var(--p-shadow-100); }
+.p-btn-default:hover { background: var(--p-color-bg-surface-hover); }
+.p-btn-critical { background: var(--p-color-bg-fill-critical); color: #fff; }
+.p-btn-critical:hover { background: var(--p-color-bg-fill-critical-hover); }
+.p-btn-plain { color: var(--p-color-text-info); padding: 0; height: auto; }
+.p-btn-plain:hover { text-decoration: underline; }
+.p-btn-sm { height: 28px; font-size: 12px; padding: 0 8px; }
+.p-btn-sm .material-symbols-outlined { font-size: 14px; }
+
+/* POLARIS BADGE */
+.p-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: var(--p-radius-full); font-size: 11px; font-weight: 600; line-height: 1.4; }
+.p-badge-success { background: var(--p-color-bg-surface-success); color: var(--p-color-text-success); }
+.p-badge-warning { background: var(--p-color-bg-surface-warning); color: var(--p-color-text-warning); }
+.p-badge-critical { background: var(--p-color-bg-surface-critical); color: var(--p-color-text-critical); }
+.p-badge-info { background: var(--p-color-bg-surface-info); color: var(--p-color-text-info); }
+.p-badge-default { background: #E4E5E7; color: var(--p-color-text-secondary); }
+
+/* POLARIS BANNER */
+.p-banner { display: flex; gap: 12px; padding: 12px 16px; border-radius: var(--p-radius-200); margin-bottom: 16px; }
+.p-banner .material-symbols-outlined { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.p-banner-success { background: var(--p-color-bg-surface-success); border: 1px solid #BAE0D0; }
+.p-banner-success .material-symbols-outlined { color: var(--p-color-text-success); }
+.p-banner-info { background: var(--p-color-bg-surface-info); border: 1px solid var(--p-color-border-info); }
+.p-banner-info .material-symbols-outlined { color: var(--p-color-text-info); }
+.p-banner-warning { background: var(--p-color-bg-surface-warning); border: 1px solid #E0C878; }
+.p-banner-warning .material-symbols-outlined { color: var(--p-color-text-warning); }
+.p-banner-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.p-banner-text { font-size: 13px; color: var(--p-color-text-secondary); }
+
+/* POLARIS TABLE */
+.p-table-wrap { overflow-x: auto; }
+table.p-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.p-table thead th { padding: 10px 16px; text-align: left; font-weight: 600; color: var(--p-color-text-secondary); font-size: 12px; border-bottom: 1px solid var(--p-color-border); background: var(--p-color-bg-surface-secondary); white-space: nowrap; }
+.p-table tbody td { padding: 12px 16px; border-bottom: 1px solid var(--p-color-border); vertical-align: middle; }
+.p-table tbody tr:hover { background: var(--p-color-bg-surface-hover); }
+.p-table tbody tr { cursor: pointer; transition: background .1s; }
+.p-table .cell-link { color: var(--p-color-text-info); font-weight: 500; }
+.p-table .cell-link:hover { text-decoration: underline; }
+.p-table .cell-actions { display: flex; gap: 4px; }
+.p-table .action-icon { width: 28px; height: 28px; border-radius: var(--p-radius-100); display: flex; align-items: center; justify-content: center; color: var(--p-color-icon); transition: all .1s; }
+.p-table .action-icon:hover { background: var(--p-color-bg-surface-active); color: var(--p-color-text); }
+.p-table .action-icon.critical:hover { color: var(--p-color-icon-critical); background: var(--p-color-bg-surface-critical); }
+.p-table .action-icon .material-symbols-outlined { font-size: 18px; }
+
+/* TABLE TOOLBAR */
+.table-toolbar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--p-color-border); flex-wrap: wrap; }
+.table-search { flex: 1; min-width: 200px; height: 32px; padding: 0 10px 0 32px; border: 1px solid var(--p-color-border); border-radius: var(--p-radius-200); font-size: 13px; color: var(--p-color-text); background: var(--p-color-bg-surface); position: relative; }
+.table-search:focus { border-color: var(--p-color-border-brand); box-shadow: 0 0 0 2px rgba(0,128,96,.2); outline: none; }
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-wrap .material-symbols-outlined { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--p-color-icon); pointer-events: none; }
+.table-select { height: 32px; padding: 0 28px 0 10px; border: 1px solid var(--p-color-border); border-radius: var(--p-radius-200); font-size: 13px; color: var(--p-color-text); background: var(--p-color-bg-surface); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' stroke='%235C5F62' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; cursor: pointer; }
+.table-pagination { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-top: 1px solid var(--p-color-border); font-size: 12px; color: var(--p-color-text-secondary); }
+.table-pagination-btns { display: flex; gap: 4px; }
+.table-pagination-btns button { width: 28px; height: 28px; border: 1px solid var(--p-color-border); border-radius: var(--p-radius-100); display: flex; align-items: center; justify-content: center; background: var(--p-color-bg-surface); color: var(--p-color-icon); }
+.table-pagination-btns button:hover { background: var(--p-color-bg-surface-hover); }
+.table-pagination-btns button:disabled { opacity: .4; cursor: default; }
+
+/* FORM */
+.p-form-group { margin-bottom: 16px; }
+.p-form-label { display: block; font-size: 13px; font-weight: 550; margin-bottom: 4px; }
+.p-form-label .req { color: var(--p-color-text-critical); }
+.p-form-help { font-size: 12px; color: var(--p-color-text-secondary); margin-top: 2px; }
+.p-input { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--p-color-border); border-radius: var(--p-radius-200); font-size: 13px; color: var(--p-color-text); background: var(--p-color-bg-surface); transition: border-color .15s, box-shadow .15s; }
+.p-input:focus { border-color: var(--p-color-border-brand); box-shadow: 0 0 0 2px rgba(0,128,96,.2); outline: none; }
+.p-input::placeholder { color: var(--p-color-text-disabled); }
+.p-textarea { width: 100%; min-height: 80px; padding: 8px 10px; border: 1px solid var(--p-color-border); border-radius: var(--p-radius-200); font-size: 13px; color: var(--p-color-text); resize: vertical; font-family: var(--p-font); }
+.p-textarea:focus { border-color: var(--p-color-border-brand); box-shadow: 0 0 0 2px rgba(0,128,96,.2); outline: none; }
+.p-select { width: 100%; height: 34px; padding: 0 28px 0 10px; border: 1px solid var(--p-color-border); border-radius: var(--p-radius-200); font-size: 13px; color: var(--p-color-text); background: var(--p-color-bg-surface); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' stroke='%235C5F62' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
+.p-select:focus { border-color: var(--p-color-border-brand); box-shadow: 0 0 0 2px rgba(0,128,96,.2); outline: none; }
+.p-radio-group { display: flex; gap: 16px; }
+.p-radio { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+.p-radio input { accent-color: var(--p-color-bg-fill-brand); }
+.p-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+.p-toggle { width: 36px; height: 20px; border-radius: 10px; background: #C9CCCF; position: relative; cursor: pointer; transition: background .2s; flex-shrink: 0; }
+.p-toggle.on { background: var(--p-color-bg-fill-brand); }
+.p-toggle::after { content: ''; width: 16px; height: 16px; border-radius: 50%; background: #fff; position: absolute; top: 2px; left: 2px; transition: left .2s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.p-toggle.on::after { left: 18px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* STAT CARDS */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat-card { background: var(--p-color-bg-surface); border-radius: var(--p-radius-300); box-shadow: var(--p-shadow-card); padding: 16px 20px; }
+.stat-card-label { font-size: 12px; color: var(--p-color-text-secondary); font-weight: 500; margin-bottom: 4px; }
+.stat-card-value { font-size: 24px; font-weight: 700; letter-spacing: -.5px; line-height: 1.2; }
+.stat-card-trend { display: inline-flex; align-items: center; gap: 2px; font-size: 11px; font-weight: 600; margin-top: 4px; }
+.stat-card-trend.up { color: var(--p-color-text-success); }
+.stat-card-trend.down { color: var(--p-color-text-critical); }
+.stat-card-trend .material-symbols-outlined { font-size: 14px; }
+
+/* ACTIVITY FEED */
+.activity-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--p-color-border); }
+.activity-item:last-child { border-bottom: none; }
+.activity-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.activity-dot.green { background: var(--p-color-bg-fill-success); }
+.activity-dot.blue { background: var(--p-color-bg-fill-info); }
+.activity-dot.amber { background: var(--p-color-bg-fill-warning); }
+.activity-text { font-size: 13px; line-height: 1.5; }
+.activity-time { font-size: 12px; color: var(--p-color-text-disabled); margin-top: 1px; }
+
+/* CHART */
+.chart-wrap { height: 240px; position: relative; }
+
+/* TABS */
+.p-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--p-color-border); margin-bottom: 16px; }
+.p-tab { padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--p-color-text-secondary); border-bottom: 2px solid transparent; transition: all .15s; }
+.p-tab:hover { color: var(--p-color-text); }
+.p-tab.active { color: var(--p-color-text); border-bottom-color: var(--p-color-border-brand); font-weight: 600; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* AVATAR */
+.p-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--p-color-bg-surface-secondary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--p-color-text-secondary); flex-shrink: 0; overflow: hidden; }
+.p-avatar.sm { width: 24px; height: 24px; font-size: 9px; }
+.p-avatar.lg { width: 40px; height: 40px; font-size: 14px; }
+
+/* DROPZONE */
+.p-dropzone { border: 2px dashed var(--p-color-border); border-radius: var(--p-radius-200); padding: 24px; text-align: center; cursor: pointer; transition: all .15s; }
+.p-dropzone:hover { border-color: var(--p-color-border-brand); background: var(--p-color-bg-surface-brand); }
+.p-dropzone .material-symbols-outlined { font-size: 32px; color: var(--p-color-icon); margin-bottom: 8px; }
+.p-dropzone-text { font-size: 13px; color: var(--p-color-text-secondary); }
+.p-dropzone-link { color: var(--p-color-text-info); font-weight: 550; }
+
+/* EMPTY STATE */
+.p-empty { text-align: center; padding: 40px 20px; }
+.p-empty .material-symbols-outlined { font-size: 48px; color: var(--p-color-border); margin-bottom: 12px; }
+.p-empty h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.p-empty p { font-size: 13px; color: var(--p-color-text-secondary); max-width: 320px; margin: 0 auto 16px; }
+
+/* SYNC LOG */
+.log-entry { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--p-color-border); font-size: 13px; }
+.log-entry:last-child { border-bottom: none; }
+.log-status { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.log-status.ok { background: var(--p-color-bg-surface-success); color: var(--p-color-text-success); }
+.log-status.err { background: var(--p-color-bg-surface-critical); color: var(--p-color-text-critical); }
+.log-status .material-symbols-outlined { font-size: 14px; }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px) { .shopify-sidebar { display: none; } .form-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo"><svg viewBox="0 0 109.5 124.5"><path d="M95.6 28.2c-.1-.6-.6-1-1.1-1-1 0-2.1-.1-3.3-.2-.7-.1-1.5-.7-2.3-1.5-2.7-2.5-5.2-6.7-7.4-6.8h-.2L77 26.6l-30.4 6.1s-1.9-13.4-2-13.9c-.3-1.8-1.8-2.6-2.8-2.6L30.3 70.5l8.7 4.8L43.7 124l43.8-9.4S95.7 28.8 95.6 28.2z" fill="#95BF47"/><path d="M94.5 27.2c-1 0-2.1-.1-3.3-.2-.7-.1-1.5-.7-2.3-1.5-2.7-2.5-5.2-6.7-7.4-6.8h-.2L77 26.6l3.8 97.5L95.6 28.3c-.1-.6-.6-1.1-1.1-1.1z" fill="#5E8E3E"/><path d="M62.1 47.4l-3.4 10.2s-3-1.6-6.7-1.6c-5.4 0-5.7 3.4-5.7 4.3 0 4.7 12.2 6.5 12.2 17.5 0 8.6-5.5 14.2-12.9 14.2-8.9 0-13.4-5.5-13.4-5.5l2.4-7.8s4.7 4 8.6 4c2.6 0 3.6-2 3.6-3.5 0-6.1-10-6.4-10-16.5C36.8 59 42 49 52.8 49c4.2 0 9.3 2.5 9.3 2.5z" fill="#FFF"/></svg></div>
+    <div class="topbar-search"><span class="material-symbols-outlined">search</span> Search <kbd>⌘K</kbd></div>
+  </div>
+  <div class="topbar-right">
+    <button class="topbar-btn"><span class="material-symbols-outlined">notifications</span><span class="notif-dot"></span></button>
+    <div class="topbar-user"><div class="topbar-user-avatar">RD</div><div class="topbar-user-name">Rainy Day Bees</div></div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <!-- SHOPIFY SIDEBAR -->
+  <nav class="shopify-sidebar">
+    <div style="padding:8px 0">
+      <div class="ss-item"><span class="material-symbols-outlined">home</span> Home</div>
+      <div class="ss-item"><span class="material-symbols-outlined">orders</span> Orders <span class="count">23</span></div>
+      <div class="ss-item"><span class="material-symbols-outlined">inventory_2</span> Products</div>
+      <div class="ss-item"><span class="material-symbols-outlined">group</span> Customers</div>
+      <div class="ss-item"><span class="material-symbols-outlined">article</span> Content</div>
+      <div class="ss-item"><span class="material-symbols-outlined">payments</span> Finance</div>
+      <div class="ss-item"><span class="material-symbols-outlined">analytics</span> Analytics</div>
+      <div class="ss-item"><span class="material-symbols-outlined">campaign</span> Marketing</div>
+      <div class="ss-item"><span class="material-symbols-outlined">sell</span> Discounts</div>
+    </div>
+    <div class="ss-divider"></div>
+    <div class="ss-section"><span class="material-symbols-outlined">chevron_right</span> Sales channels</div>
+    <div class="ss-divider"></div>
+    <div class="ss-section"><span class="material-symbols-outlined">expand_more</span> Apps</div>
+    <div style="padding:0 0 8px">
+      <div class="ss-item app-active"><span class="material-symbols-outlined">hive</span> Hive Manager</div>
+    </div>
+    <div class="ss-divider"></div>
+    <div style="padding:8px 0">
+      <div class="ss-item"><span class="material-symbols-outlined">settings</span> Settings</div>
+    </div>
+  </nav>
+
+  <!-- APP SUB-NAV -->
+  <nav class="app-subnav">
+    <div class="asn-header"><div class="asn-icon"><span class="material-symbols-outlined">hive</span></div><div class="asn-title">Hive Manager</div></div>
+    <div style="padding:4px 0">
+      <button class="asn-item active" onclick="showPage('dashboard',this)"><span class="material-symbols-outlined">dashboard</span> Dashboard</button>
+      <div class="asn-section">Management</div>
+      <button class="asn-item" onclick="showPage('clients',this)"><span class="material-symbols-outlined">people</span> Clients <span class="badge">35</span></button>
+      <button class="asn-item" onclick="showPage('hives',this)"><span class="material-symbols-outlined">sensors</span> Hives</button>
+      <button class="asn-item" onclick="showPage('inspections',this)"><span class="material-symbols-outlined">assignment</span> Inspections</button>
+      <button class="asn-item" onclick="showPage('beekeepers',this)"><span class="material-symbols-outlined">badge</span> Beekeepers</button>
+      <div class="asn-section">System</div>
+      <button class="asn-item" onclick="showPage('settings',this)"><span class="material-symbols-outlined">settings</span> Settings</button>
+      <button class="asn-item" onclick="showPage('synclog',this)"><span class="material-symbols-outlined">sync</span> Sync Log</button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-area" id="mainArea">
+
+    <!-- ===== SCREEN 1: DASHBOARD ===== -->
+    <div class="page-view active" id="pg-dashboard">
+      <div class="page-frame">
+        <div class="p-page-header"><div><div class="p-page-title">Dashboard</div><div class="p-page-subtitle">Welcome back, Peter</div></div><div class="p-page-actions"><button class="p-btn p-btn-default" onclick="showPage('inspections-new')"><span class="material-symbols-outlined">add</span> New Inspection</button><button class="p-btn p-btn-primary" onclick="showPage('clients-new')"><span class="material-symbols-outlined">add</span> Add Client</button></div></div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-card-label">Total Clients</div><div class="stat-card-value">35</div><div class="stat-card-trend up"><span class="material-symbols-outlined">trending_up</span> +3 this month</div></div>
+          <div class="stat-card"><div class="stat-card-label">Active Hives</div><div class="stat-card-value">85</div><div class="stat-card-trend up"><span class="material-symbols-outlined">trending_up</span> +7 from last month</div></div>
+          <div class="stat-card"><div class="stat-card-label">Inspections This Month</div><div class="stat-card-value">22</div><div class="stat-card-trend up"><span class="material-symbols-outlined">trending_up</span> On track</div></div>
+          <div class="stat-card"><div class="stat-card-label">Upcoming / Overdue</div><div class="stat-card-value">5 <span style="font-size:14px;color:var(--p-color-text-critical)">/ 1</span></div><div class="stat-card-trend down"><span class="material-symbols-outlined">warning</span> 1 overdue</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="p-card"><div class="p-card-header"><div class="p-card-title">Recent Activity</div></div><div class="p-card-body"><div class="activity-item"><div class="activity-dot green"></div><div><div class="activity-text">Asha submitted inspection for <strong>Dufault</strong></div><div class="activity-time">2 hours ago</div></div></div><div class="activity-item"><div class="activity-dot blue"></div><div><div class="activity-text">New client <strong>Martinez</strong> added</div><div class="activity-time">Yesterday</div></div></div><div class="activity-item"><div class="activity-dot amber"></div><div><div class="activity-text">SolutionBee sync completed — <strong>47 hives</strong> updated</div><div class="activity-time">3 hours ago</div></div></div><div class="activity-item"><div class="activity-dot green"></div><div><div class="activity-text">Sean completed inspection for <strong>Braun</strong></div><div class="activity-time">Yesterday</div></div></div><div class="activity-item"><div class="activity-dot blue"></div><div><div class="activity-text">Password reset for <strong>Campbell</strong> dashboard</div><div class="activity-time">2 days ago</div></div></div></div></div>
+          <div class="p-card"><div class="p-card-header"><div class="p-card-title">SolutionBee Status</div><span class="p-badge p-badge-success">● Connected</span></div><div class="p-card-body"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span class="material-symbols-outlined" style="color:var(--p-color-text-success)">check_circle</span><div><div style="font-weight:550">Last sync: Feb 27, 2026 10:00 AM</div><div style="font-size:12px;color:var(--p-color-text-secondary)">47 hives synced successfully · 0 errors</div></div></div><button class="p-btn p-btn-default p-btn-sm" onclick="showPage('synclog')"><span class="material-symbols-outlined">history</span> View Sync Log</button></div>
+            <div class="p-card-section"><div class="p-card-section-title">Quick Actions</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="p-btn p-btn-default" onclick="showPage('clients')"><span class="material-symbols-outlined">people</span> View All Clients</button><button class="p-btn p-btn-default" onclick="showPage('hives')"><span class="material-symbols-outlined">sync</span> Sync Now</button><button class="p-btn p-btn-default" onclick="showPage('inspections')"><span class="material-symbols-outlined">assignment</span> All Inspections</button></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 2: CLIENT LIST ===== -->
+    <div class="page-view" id="pg-clients">
+      <div class="page-frame">
+        <div class="p-page-header"><div><div class="p-page-title">Clients</div><div class="p-page-subtitle">35 clients</div></div><div class="p-page-actions"><button class="p-btn p-btn-default"><span class="material-symbols-outlined">download</span> Export</button><button class="p-btn p-btn-primary" onclick="showPage('clients-new')"><span class="material-symbols-outlined">add</span> Add Client</button></div></div>
+        <div class="p-card" style="padding:0">
+          <div class="table-toolbar">
+            <div class="search-wrap"><span class="material-symbols-outlined">search</span><input class="table-search" type="text" placeholder="Search clients..."></div>
+            <select class="table-select"><option>All Types</option><option>Residential</option><option>Commercial</option></select>
+            <select class="table-select"><option>All Statuses</option><option>Active</option><option>Inactive</option></select>
+            <select class="table-select"><option>Sort: Name A–Z</option><option>Sort: Date Added</option><option>Sort: Last Inspection</option></select>
+          </div>
+          <div class="p-table-wrap"><table class="p-table"><thead><tr><th><input type="checkbox"></th><th>Client Name</th><th>Type</th><th>Hives</th><th>Last Inspection</th><th>Dashboard</th><th>Actions</th></tr></thead><tbody>
+            <tr onclick="showPage('clients-edit')"><td><input type="checkbox"></td><td class="cell-link">Boetto</td><td><span class="p-badge p-badge-info">Residential</span></td><td>2</td><td>Feb 11, 2026</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon" title="Edit"><span class="material-symbols-outlined">edit</span></button><button class="action-icon" title="View Dashboard"><span class="material-symbols-outlined">open_in_new</span></button></td></tr>
+            <tr onclick="showPage('clients-edit')"><td><input type="checkbox"></td><td class="cell-link">Braun</td><td><span class="p-badge p-badge-success">Commercial</span></td><td>5</td><td>Feb 18, 2026</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon" title="Edit"><span class="material-symbols-outlined">edit</span></button><button class="action-icon" title="View Dashboard"><span class="material-symbols-outlined">open_in_new</span></button></td></tr>
+            <tr onclick="showPage('clients-edit')"><td><input type="checkbox"></td><td class="cell-link">Campbell</td><td><span class="p-badge p-badge-info">Residential</span></td><td>2</td><td>Feb 5, 2026</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon" title="Edit"><span class="material-symbols-outlined">edit</span></button><button class="action-icon" title="View Dashboard"><span class="material-symbols-outlined">open_in_new</span></button></td></tr>
+            <tr onclick="showPage('clients-edit')"><td><input type="checkbox"></td><td class="cell-link">Dufault</td><td><span class="p-badge p-badge-info">Residential</span></td><td>2</td><td>Feb 11, 2026</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon" title="Edit"><span class="material-symbols-outlined">edit</span></button><button class="action-icon" title="View Dashboard"><span class="material-symbols-outlined">open_in_new</span></button></td></tr>
+            <tr onclick="showPage('clients-edit')"><td><input type="checkbox"></td><td class="cell-link">Evans</td><td><span class="p-badge p-badge-info">Residential</span></td><td>3</td><td>Jan 28, 2026</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon" title="Edit"><span class="material-symbols-outlined">edit</span></button><button class="action-icon" title="View Dashboard"><span class="material-symbols-outlined">open_in_new</span></button></td></tr>
+            <tr><td><input type="checkbox"></td><td class="cell-link">Larson</td><td><span class="p-badge p-badge-success">Commercial</span></td><td>4</td><td>Feb 20, 2026</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon" title="Edit"><span class="material-symbols-outlined">edit</span></button><button class="action-icon" title="View Dashboard"><span class="material-symbols-outlined">open_in_new</span></button></td></tr>
+            <tr><td><input type="checkbox"></td><td class="cell-link">Lesky</td><td><span class="p-badge p-badge-info">Residential</span></td><td>2</td><td>Feb 8, 2026</td><td><span class="p-badge p-badge-warning">Draft</span></td><td class="cell-actions"><button class="action-icon" title="Edit"><span class="material-symbols-outlined">edit</span></button><button class="action-icon" title="View Dashboard"><span class="material-symbols-outlined">open_in_new</span></button></td></tr>
+            <tr><td><input type="checkbox"></td><td class="cell-link">Martinez</td><td><span class="p-badge p-badge-info">Residential</span></td><td>2</td><td>—</td><td><span class="p-badge p-badge-default">New</span></td><td class="cell-actions"><button class="action-icon" title="Edit"><span class="material-symbols-outlined">edit</span></button><button class="action-icon" title="View Dashboard"><span class="material-symbols-outlined">open_in_new</span></button></td></tr>
+          </tbody></table></div>
+          <div class="table-pagination"><span>Showing 1–8 of 35 clients</span><div class="table-pagination-btns"><button disabled><span class="material-symbols-outlined" style="font-size:16px">chevron_left</span></button><button><span class="material-symbols-outlined" style="font-size:16px">chevron_right</span></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 3: CLIENT ADD/EDIT ===== -->
+    <div class="page-view" id="pg-clients-new">
+      <div class="page-frame">
+        <div class="p-page-back" onclick="showPage('clients')"><span class="material-symbols-outlined">arrow_back</span> Clients</div>
+        <div class="p-page-header"><div><div class="p-page-title">Add New Client</div></div><div class="p-page-actions"><button class="p-btn p-btn-default">Discard</button><button class="p-btn p-btn-primary">Save Client</button></div></div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+          <div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Client Information</div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Client Name <span class="req">*</span></label><input class="p-input" type="text" placeholder="e.g. Dufault"></div><div class="p-form-group"><label class="p-form-label">Client Slug <span class="req">*</span></label><input class="p-input" type="text" placeholder="auto-generated"><div class="p-form-help">URL: rainydaybees.com/hive-host/<strong>slug</strong></div></div></div><div class="p-form-group"><label class="p-form-label">Client Type <span class="req">*</span></label><div class="p-radio-group"><label class="p-radio"><input type="radio" name="ctype" checked> Residential</label><label class="p-radio"><input type="radio" name="ctype"> Commercial</label></div></div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Contact Name</label><input class="p-input" type="text"></div><div class="p-form-group"><label class="p-form-label">Contact Email</label><input class="p-input" type="email"></div></div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Contact Phone</label><input class="p-input" type="tel"></div><div class="p-form-group"><label class="p-form-label">Address</label><input class="p-input" type="text" placeholder="Service location"></div></div><div class="p-form-group"><label class="p-form-label">Internal Notes</label><textarea class="p-textarea" placeholder="Notes visible only to admins..."></textarea></div></div></div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Hive Assignment</div><div class="p-table-wrap"><table class="p-table"><thead><tr><th>Hive Name</th><th>SolutionBee ID</th><th>Scale Serial</th><th>Status</th><th></th></tr></thead><tbody><tr><td><input class="p-input" style="width:140px" value="Duncan"></td><td><select class="p-select" style="width:160px"><option>30002243 — Duncan</option><option>30002428 — Nolte</option><option>30002426 — Rafael</option></select></td><td style="color:var(--p-color-text-secondary)">#30002243</td><td><span class="p-badge p-badge-success">Active</span></td><td><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr><tr><td><input class="p-input" style="width:140px" value="Nolte"></td><td><select class="p-select" style="width:160px"><option>30002428 — Nolte</option></select></td><td style="color:var(--p-color-text-secondary)">#30002428</td><td><span class="p-badge p-badge-success">Active</span></td><td><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr></tbody></table></div><button class="p-btn p-btn-default" style="margin-top:12px"><span class="material-symbols-outlined">add</span> Add Hive</button></div></div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Assigned Beekeepers</div><div style="display:flex;gap:12px;flex-wrap:wrap"><label class="p-radio"><input type="checkbox" checked> Peter Nolte</label><label class="p-radio"><input type="checkbox" checked> Asha Patterson</label><label class="p-radio"><input type="checkbox"> Sean O'Hara</label></div><div class="p-form-help" style="margin-top:8px">Selected beekeepers will appear on this client's dashboard.</div></div></div>
+          </div>
+          <div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Dashboard Access</div><div class="p-toggle-row"><div><div style="font-weight:550">Dashboard Active</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Client can access their dashboard</div></div><div class="p-toggle on" onclick="this.classList.toggle('on')"></div></div><div class="p-form-group" style="margin-top:12px"><label class="p-form-label">Dashboard Password <span class="req">*</span></label><div style="display:flex;gap:6px"><input class="p-input" type="text" value="honey-dufault-2026" style="flex:1"><button class="p-btn p-btn-default p-btn-sm"><span class="material-symbols-outlined">content_copy</span></button></div><div class="p-form-help">Auto-generated. Edit or regenerate as needed.</div></div></div>
+              <div class="p-card-section"><div class="p-card-section-title">Shareable Link (Commercial)</div><div class="p-toggle-row"><div><div style="font-weight:550">Shareable Link</div><div style="font-size:12px;color:var(--p-color-text-secondary)">No password required with this link</div></div><div class="p-toggle" onclick="this.classList.toggle('on')"></div></div></div>
+            </div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Content Overrides</div><div class="p-form-group"><label class="p-form-label">Custom Welcome Message</label><textarea class="p-textarea" placeholder="Leave blank to use default..."></textarea></div></div></div>
+            <div class="p-card" style="border:1px solid var(--p-color-border-critical)"><div class="p-card-section"><div class="p-card-section-title" style="color:var(--p-color-text-critical)">Danger Zone</div><button class="p-btn p-btn-critical"><span class="material-symbols-outlined">delete</span> Delete Client</button><div class="p-form-help" style="margin-top:4px">This action cannot be undone.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 3b: CLIENT EDIT (reuses clients-new with filled data) ===== -->
+    <div class="page-view" id="pg-clients-edit">
+      <div class="page-frame">
+        <div class="p-page-back" onclick="showPage('clients')"><span class="material-symbols-outlined">arrow_back</span> Clients</div>
+        <div class="p-page-header"><div><div class="p-page-title">Dufault</div><div class="p-page-subtitle">Residential · Seattle, WA · 2 hives</div></div><div class="p-page-actions"><button class="p-btn p-btn-default">View Dashboard</button><button class="p-btn p-btn-primary">Save Changes</button></div></div>
+        <div class="p-banner p-banner-info"><span class="material-symbols-outlined">info</span><div><div class="p-banner-title">Dashboard is live</div><div class="p-banner-text">This client's dashboard is accessible at <a href="#">rainydaybees.com/hive-host/dufault</a></div></div></div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+          <div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Client Information</div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Client Name <span class="req">*</span></label><input class="p-input" value="Dufault"></div><div class="p-form-group"><label class="p-form-label">Client Slug</label><input class="p-input" value="dufault"><div class="p-form-help">rainydaybees.com/hive-host/dufault</div></div></div><div class="p-form-group"><label class="p-form-label">Client Type</label><div class="p-radio-group"><label class="p-radio"><input type="radio" name="ectype" checked> Residential</label><label class="p-radio"><input type="radio" name="ectype"> Commercial</label></div></div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Contact Name</label><input class="p-input" value="Sarah Dufault"></div><div class="p-form-group"><label class="p-form-label">Contact Email</label><input class="p-input" value="sarah@example.com"></div></div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Contact Phone</label><input class="p-input" value="(206) 555-0142"></div><div class="p-form-group"><label class="p-form-label">Address</label><input class="p-input" value="1423 NE 52nd St, Seattle, WA"></div></div></div></div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Assigned Hives</div><div class="p-table-wrap"><table class="p-table"><thead><tr><th>Hive Name</th><th>SolutionBee ID</th><th>Weight</th><th>Temp</th><th>Last Read</th><th></th></tr></thead><tbody><tr onclick="showPage('hive-detail')"><td class="cell-link">Duncan</td><td>#30002243</td><td>91.29 lbs</td><td>41°F</td><td>Feb 24, 6:00 PM</td><td><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr><tr onclick="showPage('hive-detail')"><td class="cell-link">Nolte</td><td>#30002428</td><td>56.02 lbs</td><td>39°F</td><td>Feb 24, 6:00 PM</td><td><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr></tbody></table></div><button class="p-btn p-btn-default" style="margin-top:12px"><span class="material-symbols-outlined">add</span> Add Hive</button></div></div>
+          </div>
+          <div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Dashboard Access</div><div class="p-toggle-row"><div><div style="font-weight:550">Dashboard Active</div></div><div class="p-toggle on" onclick="this.classList.toggle('on')"></div></div><div class="p-form-group" style="margin-top:12px"><label class="p-form-label">Password</label><div style="display:flex;gap:6px"><input class="p-input" value="honey-dufault-2026" style="flex:1"><button class="p-btn p-btn-default p-btn-sm"><span class="material-symbols-outlined">content_copy</span></button></div></div></div></div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Beekeepers</div><div style="display:flex;gap:12px;flex-wrap:wrap"><label class="p-radio"><input type="checkbox" checked> Peter Nolte</label><label class="p-radio"><input type="checkbox" checked> Asha Patterson</label><label class="p-radio"><input type="checkbox" checked> Sean O'Hara</label></div></div></div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Recent Inspections</div><div class="activity-item"><div class="activity-dot green"></div><div><div class="activity-text"><strong>Asha Patterson</strong> — Scale install</div><div class="activity-time">Feb 11, 2026</div></div></div><div class="activity-item"><div class="activity-dot green"></div><div><div class="activity-text"><strong>Asha Patterson</strong> — Winter check</div><div class="activity-time">Jan 13, 2026</div></div></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 4: HIVE LIST ===== -->
+    <div class="page-view" id="pg-hives">
+      <div class="page-frame">
+        <div class="p-page-header"><div><div class="p-page-title">Hives</div><div class="p-page-subtitle">85 hives synced from SolutionBee</div></div><div class="p-page-actions"><button class="p-btn p-btn-default"><span class="material-symbols-outlined">sync</span> Sync Now</button></div></div>
+        <div class="p-banner p-banner-success"><span class="material-symbols-outlined">check_circle</span><div><div class="p-banner-title">Last synced with SolutionBee: Feb 27, 2026 10:00 AM</div><div class="p-banner-text">47 hives updated · 0 errors · Next sync in 55 minutes</div></div></div>
+        <div class="p-card" style="padding:0">
+          <div class="table-toolbar"><div class="search-wrap"><span class="material-symbols-outlined">search</span><input class="table-search" type="text" placeholder="Search by hive name or ID..."></div><select class="table-select"><option>All</option><option>Assigned</option><option>Unassigned</option></select><select class="table-select"><option>All Clients</option><option>Boetto</option><option>Braun</option><option>Dufault</option></select></div>
+          <div class="p-table-wrap"><table class="p-table"><thead><tr><th>Hive Name</th><th>SolutionBee ID</th><th>Assigned Client</th><th>Weight</th><th>Temp</th><th>Last Reading</th><th>Status</th></tr></thead><tbody>
+            <tr onclick="showPage('hive-detail')"><td class="cell-link">Duncan</td><td style="color:var(--p-color-text-secondary)">#30002243</td><td>Dufault</td><td>91.29 lbs</td><td>41°F</td><td>Feb 24, 6:00 PM</td><td><span class="p-badge p-badge-success">Active</span></td></tr>
+            <tr onclick="showPage('hive-detail')"><td class="cell-link">Nolte — 2428</td><td style="color:var(--p-color-text-secondary)">#30002428</td><td>Dufault</td><td>56.02 lbs</td><td>39°F</td><td>Feb 24, 6:00 PM</td><td><span class="p-badge p-badge-success">Active</span></td></tr>
+            <tr><td class="cell-link">Rafael</td><td style="color:var(--p-color-text-secondary)">#30002426</td><td>Boetto</td><td>110.32 lbs</td><td>41°F</td><td>Feb 24, 6:00 PM</td><td><span class="p-badge p-badge-success">Active</span></td></tr>
+            <tr><td class="cell-link">Stoughton 1</td><td style="color:var(--p-color-text-secondary)">#30002418</td><td>Campbell</td><td>101.61 lbs</td><td>41°F</td><td>Feb 24, 6:00 PM</td><td><span class="p-badge p-badge-success">Active</span></td></tr>
+            <tr><td class="cell-link">Heather 1</td><td style="color:var(--p-color-text-secondary)">#30002248</td><td>Evans</td><td>163.45 lbs</td><td>43°F</td><td>Feb 24, 6:00 PM</td><td><span class="p-badge p-badge-success">Active</span></td></tr>
+            <tr><td class="cell-link">Owens</td><td style="color:var(--p-color-text-secondary)">#30002938</td><td><span style="color:var(--p-color-text-disabled)">Unassigned</span></td><td>-0.37 lbs</td><td>55°F</td><td>Feb 4, 3:00 PM</td><td><span class="p-badge p-badge-warning">Offline</span></td></tr>
+            <tr><td class="cell-link">White</td><td style="color:var(--p-color-text-secondary)">#30002937</td><td><span style="color:var(--p-color-text-disabled)">Unassigned</span></td><td>116.93 lbs</td><td>55°F</td><td>Feb 4, 2:00 PM</td><td><span class="p-badge p-badge-warning">Offline</span></td></tr>
+            <tr><td class="cell-link">Braun</td><td style="color:var(--p-color-text-secondary)">#30002419</td><td>Braun</td><td>155.29 lbs</td><td>57°F</td><td>Feb 4, 12:00 PM</td><td><span class="p-badge p-badge-success">Active</span></td></tr>
+          </tbody></table></div>
+          <div class="table-pagination"><span>Showing 1–8 of 85 hives</span><div class="table-pagination-btns"><button disabled><span class="material-symbols-outlined" style="font-size:16px">chevron_left</span></button><button><span class="material-symbols-outlined" style="font-size:16px">chevron_right</span></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 5: HIVE DETAIL ===== -->
+    <div class="page-view" id="pg-hive-detail">
+      <div class="page-frame">
+        <div class="p-page-back" onclick="showPage('hives')"><span class="material-symbols-outlined">arrow_back</span> Hives</div>
+        <div class="p-page-header"><div><div class="p-page-title">Duncan</div><div class="p-page-subtitle">SolutionBee #30002243 · Assigned to Dufault</div></div><div class="p-page-actions"><button class="p-btn p-btn-primary">Save Changes</button></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Hive Information</div><div class="p-form-group"><label class="p-form-label">Display Name</label><input class="p-input" value="Duncan"></div><div class="form-row"><div class="p-form-group"><label class="p-form-label">SolutionBee ID</label><input class="p-input" value="30002243" disabled style="background:#F6F6F7"></div><div class="p-form-group"><label class="p-form-label">Scale Serial</label><input class="p-input" value="30002243" disabled style="background:#F6F6F7"></div></div><div class="form-row"><div class="p-form-group"><label class="p-form-label">GPS Location</label><input class="p-input" value="47.6062° N, 122.3321° W" disabled style="background:#F6F6F7"></div><div class="p-form-group"><label class="p-form-label">Hive Type</label><input class="p-input" value="HM20" disabled style="background:#F6F6F7"></div></div><div class="p-form-group"><label class="p-form-label">Assigned Client</label><select class="p-select"><option selected>Dufault</option><option>Boetto</option><option>Braun</option><option>— Unassigned —</option></select></div></div></div>
+          <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Current Readings</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="background:var(--p-color-bg-surface-secondary);border-radius:var(--p-radius-200);padding:16px;text-align:center"><div style="font-size:12px;color:var(--p-color-text-secondary);margin-bottom:4px">Weight</div><div style="font-size:28px;font-weight:700;color:var(--p-color-text)">91.29</div><div style="font-size:12px;color:var(--p-color-text-secondary)">lbs</div></div><div style="background:var(--p-color-bg-surface-secondary);border-radius:var(--p-radius-200);padding:16px;text-align:center"><div style="font-size:12px;color:var(--p-color-text-secondary);margin-bottom:4px">Temperature</div><div style="font-size:28px;font-weight:700;color:var(--p-color-text-success)">41°F</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Ambient</div></div><div style="background:var(--p-color-bg-surface-secondary);border-radius:var(--p-radius-200);padding:16px;text-align:center"><div style="font-size:12px;color:var(--p-color-text-secondary);margin-bottom:4px">Battery</div><div style="font-size:28px;font-weight:700;color:var(--p-color-text-success)">100%</div></div><div style="background:var(--p-color-bg-surface-secondary);border-radius:var(--p-radius-200);padding:16px;text-align:center"><div style="font-size:12px;color:var(--p-color-text-secondary);margin-bottom:4px">Last Read</div><div style="font-size:14px;font-weight:600;margin-top:6px">Feb 24, 2026</div><div style="font-size:12px;color:var(--p-color-text-secondary)">6:00 PM</div></div></div></div></div>
+        </div>
+        <div class="p-card"><div class="p-card-header"><div class="p-card-title">Scale Data Preview</div><div style="display:flex;gap:4px"><button class="p-btn p-btn-sm p-btn-primary">7D</button><button class="p-btn p-btn-sm p-btn-default">30D</button><button class="p-btn p-btn-sm p-btn-default">90D</button><button class="p-btn p-btn-sm p-btn-default">1Y</button></div></div><div class="p-card-body"><div class="chart-wrap"><canvas id="hiveDetailChart"></canvas></div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 6: INSPECTION LIST ===== -->
+    <div class="page-view" id="pg-inspections">
+      <div class="page-frame">
+        <div class="p-page-header"><div><div class="p-page-title">Inspection Reports</div><div class="p-page-subtitle">148 total inspections</div></div><div class="p-page-actions"><button class="p-btn p-btn-primary" onclick="showPage('inspections-new')"><span class="material-symbols-outlined">add</span> New Inspection</button></div></div>
+        <div class="p-card" style="padding:0">
+          <div class="table-toolbar"><div class="search-wrap"><span class="material-symbols-outlined">search</span><input class="table-search" type="text" placeholder="Search by client..."></div><select class="table-select"><option>All Beekeepers</option><option>Peter Nolte</option><option>Sean O'Hara</option><option>Asha Patterson</option></select><select class="table-select"><option>All Statuses</option><option>Draft</option><option>Submitted</option><option>Reviewed</option></select></div>
+          <div class="p-table-wrap"><table class="p-table"><thead><tr><th>Date</th><th>Client</th><th>Beekeeper</th><th>Hives</th><th>Photo</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+            <tr onclick="showPage('inspections-new')"><td>Feb 11, 2026</td><td class="cell-link">Dufault</td><td><div style="display:flex;align-items:center;gap:6px"><div class="p-avatar sm">AP</div> Asha Patterson</div></td><td>2 of 2</td><td><span class="material-symbols-outlined" style="font-size:16px;color:var(--p-color-text-success)">photo_camera</span></td><td><span class="p-badge p-badge-success">Submitted</span></td><td class="cell-actions"><button class="action-icon"><span class="material-symbols-outlined">edit</span></button><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr>
+            <tr><td>Feb 18, 2026</td><td class="cell-link">Braun</td><td><div style="display:flex;align-items:center;gap:6px"><div class="p-avatar sm">SO</div> Sean O'Hara</div></td><td>5 of 5</td><td><span class="material-symbols-outlined" style="font-size:16px;color:var(--p-color-text-success)">photo_camera</span></td><td><span class="p-badge p-badge-success">Reviewed</span></td><td class="cell-actions"><button class="action-icon"><span class="material-symbols-outlined">edit</span></button><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr>
+            <tr><td>Feb 20, 2026</td><td class="cell-link">Larson</td><td><div style="display:flex;align-items:center;gap:6px"><div class="p-avatar sm">PN</div> Peter Nolte</div></td><td>4 of 4</td><td>—</td><td><span class="p-badge p-badge-warning">Draft</span></td><td class="cell-actions"><button class="action-icon"><span class="material-symbols-outlined">edit</span></button><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr>
+            <tr><td>Jan 13, 2026</td><td class="cell-link">Dufault</td><td><div style="display:flex;align-items:center;gap:6px"><div class="p-avatar sm">AP</div> Asha Patterson</div></td><td>2 of 2</td><td>—</td><td><span class="p-badge p-badge-success">Submitted</span></td><td class="cell-actions"><button class="action-icon"><span class="material-symbols-outlined">edit</span></button><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr>
+            <tr><td>Nov 15, 2025</td><td class="cell-link">Dufault</td><td><div style="display:flex;align-items:center;gap:6px"><div class="p-avatar sm">SO</div> Sean O'Hara</div></td><td>2 of 2</td><td><span class="material-symbols-outlined" style="font-size:16px;color:var(--p-color-text-success)">photo_camera</span></td><td><span class="p-badge p-badge-success">Reviewed</span></td><td class="cell-actions"><button class="action-icon"><span class="material-symbols-outlined">edit</span></button><button class="action-icon critical"><span class="material-symbols-outlined">delete</span></button></td></tr>
+          </tbody></table></div>
+          <div class="table-pagination"><span>Showing 1–5 of 148 reports</span><div class="table-pagination-btns"><button disabled><span class="material-symbols-outlined" style="font-size:16px">chevron_left</span></button><button><span class="material-symbols-outlined" style="font-size:16px">chevron_right</span></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 7: INSPECTION CREATE/EDIT ===== -->
+    <div class="page-view" id="pg-inspections-new">
+      <div class="page-frame">
+        <div class="p-page-back" onclick="showPage('inspections')"><span class="material-symbols-outlined">arrow_back</span> Inspections</div>
+        <div class="p-page-header"><div><div class="p-page-title">New Inspection Report</div></div><div class="p-page-actions"><button class="p-btn p-btn-default">Save as Draft</button><button class="p-btn p-btn-primary">Submit Report</button></div></div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+          <div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Inspection Details</div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Client <span class="req">*</span></label><select class="p-select"><option value="">Select client...</option><option>Boetto</option><option>Braun</option><option selected>Dufault</option><option>Evans</option></select></div><div class="p-form-group"><label class="p-form-label">Inspection Date <span class="req">*</span></label><input class="p-input" type="date" value="2026-02-27"></div></div><div class="p-form-group"><label class="p-form-label">Beekeeper <span class="req">*</span></label><select class="p-select"><option>Peter Nolte</option><option>Sean O'Hara</option><option selected>Asha Patterson</option></select></div></div></div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Per-Hive Updates</div>
+              <div style="background:var(--p-color-bg-surface-secondary);border-radius:var(--p-radius-200);padding:16px;margin-bottom:12px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><span style="font-weight:600">Hive 1: Duncan</span><select class="p-select" style="width:140px"><option selected>Healthy</option><option>Needs Attention</option><option>Critical</option><option>Dead</option></select></div>
+                <div class="p-form-group"><label class="p-form-label">Update <span class="req">*</span></label><textarea class="p-textarea" placeholder="Describe what you observed and did...">Today I added a scale to the hive set up on the right so that we can keep track of the hive/colonies weight throughout the seasons.</textarea></div>
+              </div>
+              <div style="background:var(--p-color-bg-surface-secondary);border-radius:var(--p-radius-200);padding:16px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><span style="font-weight:600">Hive 2: Nolte</span><select class="p-select" style="width:140px"><option>Healthy</option><option>Needs Attention</option><option selected>Critical</option><option>Dead</option></select></div>
+                <div class="p-form-group"><label class="p-form-label">Update <span class="req">*</span></label><textarea class="p-textarea" placeholder="Describe what you observed and did...">Unfortunately the colonies didn't make it through the winter this year. Next visit I'll do a deeper look into what could have been the cause of death.</textarea></div>
+              </div>
+            </div></div>
+          </div>
+          <div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Photos</div><div class="p-dropzone"><span class="material-symbols-outlined">cloud_upload</span><div class="p-dropzone-text"><span class="p-dropzone-link">Upload photos</span> or drag and drop</div><div style="font-size:11px;color:var(--p-color-text-disabled);margin-top:4px">JPG, PNG up to 10MB each</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><div style="aspect-ratio:1;background:var(--p-color-bg-surface-secondary);border-radius:var(--p-radius-200);display:flex;align-items:center;justify-content:center;position:relative"><span class="material-symbols-outlined" style="font-size:32px;color:var(--p-color-border)">image</span><button style="position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(0,0,0,.5);border-radius:50%;display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:12px;color:#fff">close</span></button></div><div style="aspect-ratio:1;background:var(--p-color-bg-surface-secondary);border-radius:var(--p-radius-200);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:32px;color:var(--p-color-border)">image</span></div></div></div></div>
+            <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Internal Notes</div><textarea class="p-textarea" placeholder="Notes visible only to admin, not shown on dashboard..."></textarea></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 8: BEEKEEPER MANAGEMENT ===== -->
+    <div class="page-view" id="pg-beekeepers">
+      <div class="page-frame">
+        <div class="p-page-header"><div><div class="p-page-title">Beekeepers</div><div class="p-page-subtitle">3 active beekeepers</div></div><div class="p-page-actions"><button class="p-btn p-btn-primary"><span class="material-symbols-outlined">add</span> Add Beekeeper</button></div></div>
+        <div class="p-card" style="padding:0">
+          <div class="p-table-wrap"><table class="p-table"><thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Assigned Clients</th><th>Inspections (YTD)</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+            <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="p-avatar">PN</div><div><div style="font-weight:550">Peter Nolte</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Owner</div></div></div></td><td><span class="p-badge p-badge-info">Admin</span></td><td>peter&#64;rainydaybees.com</td><td>35</td><td>18</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon"><span class="material-symbols-outlined">edit</span></button></td></tr>
+            <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="p-avatar">SO</div><div><div style="font-weight:550">Sean O'Hara</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Lead Beekeeper</div></div></div></td><td><span class="p-badge p-badge-default">Field Worker</span></td><td>sean&#64;rainydaybees.com</td><td>20</td><td>42</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon"><span class="material-symbols-outlined">edit</span></button></td></tr>
+            <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="p-avatar">AP</div><div><div style="font-weight:550">Asha Patterson</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Beekeeper</div></div></div></td><td><span class="p-badge p-badge-default">Field Worker</span></td><td>asha&#64;rainydaybees.com</td><td>15</td><td>34</td><td><span class="p-badge p-badge-success">Active</span></td><td class="cell-actions"><button class="action-icon"><span class="material-symbols-outlined">edit</span></button></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 9: SETTINGS ===== -->
+    <div class="page-view" id="pg-settings">
+      <div class="page-frame">
+        <div class="p-page-header"><div><div class="p-page-title">Settings</div></div></div>
+        <div class="p-tabs">
+          <button class="p-tab active" onclick="switchTab('general',this)">General</button>
+          <button class="p-tab" onclick="switchTab('solutionbee',this)">SolutionBee</button>
+          <button class="p-tab" onclick="switchTab('dashboard-defaults',this)">Dashboard Defaults</button>
+          <button class="p-tab" onclick="switchTab('notifications',this)">Notifications</button>
+        </div>
+        <div class="tab-panel active" id="tab-general">
+          <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Company Info</div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Company Name</label><input class="p-input" value="Rainy Day Bees"></div><div class="p-form-group"><label class="p-form-label">Primary Contact Phone</label><input class="p-input" value="206.519.8505"></div></div><div class="p-form-group"><label class="p-form-label">Primary Contact Email</label><input class="p-input" value="peter&#64;rainydaybees.com"></div></div></div>
+          <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Branding</div><div class="p-form-group"><label class="p-form-label">Logo</label><div class="p-dropzone" style="padding:16px"><span class="material-symbols-outlined" style="font-size:24px">cloud_upload</span><div class="p-dropzone-text"><span class="p-dropzone-link">Upload logo</span></div></div></div></div></div>
+          <button class="p-btn p-btn-primary">Save Settings</button>
+        </div>
+        <div class="tab-panel" id="tab-solutionbee">
+          <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">SolutionBee API Configuration</div><div class="p-form-group"><label class="p-form-label">API Username (Email)</label><input class="p-input" type="email" value="peter&#64;rainydaybees.com"></div><div class="p-form-group"><label class="p-form-label">API Password</label><input class="p-input" type="password" value="••••••••"><div class="p-form-help">Used to authenticate with cloud.solutionbee.com</div></div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Sync Interval</label><select class="p-select"><option>Every 30 minutes</option><option selected>Every 1 hour</option><option>Every 2 hours</option><option>Every 6 hours</option></select></div><div class="p-form-group"><label class="p-form-label">Data Interval</label><select class="p-select"><option>15 minutes</option><option selected>60 minutes (hourly)</option><option>1440 minutes (daily)</option></select></div></div><div class="p-form-group"><label class="p-form-label">Unit Preferences</label><div class="p-radio-group"><label class="p-radio"><input type="radio" name="units" checked> Imperial (lbs, °F)</label><label class="p-radio"><input type="radio" name="units"> Metric (kg, °C)</label></div></div></div></div>
+          <div class="p-banner p-banner-success"><span class="material-symbols-outlined">check_circle</span><div><div class="p-banner-title">Connection verified</div><div class="p-banner-text">Successfully authenticated. 85 hives found on account.</div></div></div>
+          <div style="display:flex;gap:8px"><button class="p-btn p-btn-default"><span class="material-symbols-outlined">wifi_tethering</span> Test Connection</button><button class="p-btn p-btn-primary">Save Settings</button></div>
+        </div>
+        <div class="tab-panel" id="tab-dashboard-defaults">
+          <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Default Dashboard Content</div><div class="p-form-group"><label class="p-form-label">Default Welcome Message</label><textarea class="p-textarea">Welcome to your Hive Host Dashboard! Here you'll find updates on your hives, including inspection reports and live scale data.</textarea></div><div class="p-form-group"><label class="p-form-label">Emergency Contact Text</label><input class="p-input" value="Questions or have a bee emergency? Call or text Peter at 206.519.8505"></div></div></div>
+          <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Default Resources</div><div style="display:flex;flex-direction:column;gap:8px"><div class="form-row"><div class="p-form-group"><label class="p-form-label">Label</label><input class="p-input" value="Newsletters & Blog Posts"></div><div class="p-form-group"><label class="p-form-label">URL</label><input class="p-input" value="https://rainydaybees.com/blog"></div></div><div class="form-row"><div class="p-form-group"><label class="p-form-label">Label</label><input class="p-input" value="Hive Host Resources"></div><div class="p-form-group"><label class="p-form-label">URL</label><input class="p-input" value="https://rainydaybees.com/resources"></div></div></div><button class="p-btn p-btn-default" style="margin-top:8px"><span class="material-symbols-outlined">add</span> Add Resource</button></div></div>
+          <button class="p-btn p-btn-primary">Save Settings</button>
+        </div>
+        <div class="tab-panel" id="tab-notifications">
+          <div class="p-card"><div class="p-card-section"><div class="p-card-section-title">Email Notifications</div><div class="p-toggle-row"><div><div style="font-weight:550">New inspection submitted</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Get notified when a beekeeper submits an inspection</div></div><div class="p-toggle on" onclick="this.classList.toggle('on')"></div></div><div class="p-toggle-row"><div><div style="font-weight:550">SolutionBee sync errors</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Get alerted when a sync fails</div></div><div class="p-toggle on" onclick="this.classList.toggle('on')"></div></div><div class="p-toggle-row"><div><div style="font-weight:550">Overdue inspections</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Daily digest of overdue inspections</div></div><div class="p-toggle" onclick="this.classList.toggle('on')"></div></div><div class="p-toggle-row"><div><div style="font-weight:550">Hive alerts (low weight, temp drop)</div><div style="font-size:12px;color:var(--p-color-text-secondary)">Automated alerts based on scale data thresholds</div></div><div class="p-toggle on" onclick="this.classList.toggle('on')"></div></div></div></div>
+          <button class="p-btn p-btn-primary">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 10: SYNC LOG ===== -->
+    <div class="page-view" id="pg-synclog">
+      <div class="page-frame">
+        <div class="p-page-header"><div><div class="p-page-title">SolutionBee Sync Log</div><div class="p-page-subtitle">Automatic sync every 1 hour</div></div><div class="p-page-actions"><button class="p-btn p-btn-primary"><span class="material-symbols-outlined">sync</span> Sync Now</button></div></div>
+        <div class="p-banner p-banner-success"><span class="material-symbols-outlined">check_circle</span><div><div class="p-banner-title">System healthy</div><div class="p-banner-text">Last 24 hours: 24 syncs completed, 0 failures</div></div></div>
+        <div class="p-card"><div class="p-card-header"><div class="p-card-title">Recent Syncs</div></div><div class="p-card-body">
+          <div class="log-entry"><div class="log-status ok"><span class="material-symbols-outlined">check</span></div><div style="flex:1"><div style="font-weight:550">Sync completed</div><div style="font-size:12px;color:var(--p-color-text-secondary)">47 hives updated · 38 sensors updated · 0 errors</div></div><div style="font-size:12px;color:var(--p-color-text-disabled)">Feb 27, 10:00 AM</div><div style="font-size:12px;color:var(--p-color-text-disabled)">2.3s</div></div>
+          <div class="log-entry"><div class="log-status ok"><span class="material-symbols-outlined">check</span></div><div style="flex:1"><div style="font-weight:550">Sync completed</div><div style="font-size:12px;color:var(--p-color-text-secondary)">47 hives updated · 38 sensors updated · 0 errors</div></div><div style="font-size:12px;color:var(--p-color-text-disabled)">Feb 27, 9:00 AM</div><div style="font-size:12px;color:var(--p-color-text-disabled)">2.1s</div></div>
+          <div class="log-entry"><div class="log-status ok"><span class="material-symbols-outlined">check</span></div><div style="flex:1"><div style="font-weight:550">Sync completed</div><div style="font-size:12px;color:var(--p-color-text-secondary)">47 hives updated · 38 sensors updated · 0 errors</div></div><div style="font-size:12px;color:var(--p-color-text-disabled)">Feb 27, 8:00 AM</div><div style="font-size:12px;color:var(--p-color-text-disabled)">1.9s</div></div>
+          <div class="log-entry"><div class="log-status err"><span class="material-symbols-outlined">close</span></div><div style="flex:1"><div style="font-weight:550;color:var(--p-color-text-critical)">Sync failed — timeout</div><div style="font-size:12px;color:var(--p-color-text-secondary)">SolutionBee API returned 504 Gateway Timeout · Auto-retry in 5m succeeded</div></div><div style="font-size:12px;color:var(--p-color-text-disabled)">Feb 26, 2:00 PM</div><div style="font-size:12px;color:var(--p-color-text-disabled)">30.0s</div></div>
+          <div class="log-entry"><div class="log-status ok"><span class="material-symbols-outlined">check</span></div><div style="flex:1"><div style="font-weight:550">Sync completed (retry)</div><div style="font-size:12px;color:var(--p-color-text-secondary)">47 hives updated · 38 sensors updated · 0 errors</div></div><div style="font-size:12px;color:var(--p-color-text-disabled)">Feb 26, 2:05 PM</div><div style="font-size:12px;color:var(--p-color-text-disabled)">2.4s</div></div>
+          <div class="log-entry"><div class="log-status ok"><span class="material-symbols-outlined">check</span></div><div style="flex:1"><div style="font-weight:550">Sync completed</div><div style="font-size:12px;color:var(--p-color-text-secondary)">47 hives updated · 38 sensors updated · 0 errors</div></div><div style="font-size:12px;color:var(--p-color-text-disabled)">Feb 26, 1:00 PM</div><div style="font-size:12px;color:var(--p-color-text-disabled)">2.0s</div></div>
+        </div></div>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+</div><!-- /layout -->
+
+<script>
+// PAGE NAV
+function showPage(id, navBtn) {
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('pg-' + id);
+  if (target) target.classList.add('active');
+  if (navBtn) { document.querySelectorAll('.asn-item').forEach(i => i.classList.remove('active')); navBtn.classList.add('active'); }
+  document.getElementById('mainArea').scrollTop = 0;
+  // Build chart on hive detail
+  if (id === 'hive-detail') setTimeout(buildHiveChart, 100);
+}
+
+// SETTINGS TABS
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// HIVE DETAIL CHART
+let hdc = null;
+function buildHiveChart() {
+  const el = document.getElementById('hiveDetailChart');
+  if (!el) return;
+  if (hdc) hdc.destroy();
+  const labels = [], weights = [], temps = [];
+  for (let i = 0; i < 28; i++) {
+    const d = new Date(2026, 1, 20 + Math.floor(i / 4), (i % 4) * 6);
+    labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+    weights.push(+(88 + Math.sin(i * .3) * 3 + Math.random() * 2 + i * .08).toFixed(1));
+    temps.push(+(38 + Math.sin(i * .5) * 6 + Math.random() * 3).toFixed(1));
+  }
+  hdc = new Chart(el, {
+    type: 'line',
+    data: { labels, datasets: [
+      { label: 'Weight (lbs)', data: weights, borderColor: '#C17A15', backgroundColor: 'rgba(193,122,21,.08)', fill: true, tension: .4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, yAxisID: 'y' },
+      { label: 'Temp (°F)', data: temps, borderColor: '#008060', backgroundColor: 'transparent', fill: false, tension: .4, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 3, yAxisID: 'y1' }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', font: { size: 11, family: 'Inter' }, padding: 16, color: '#616161' } }, tooltip: { backgroundColor: '#303030', titleFont: { size: 11 }, bodyFont: { size: 12 }, padding: 10, cornerRadius: 8 } },
+      scales: { x: { ticks: { maxTicksLimit: 8, font: { size: 10 }, color: '#8c9196' }, grid: { display: false } },
+        y: { position: 'left', title: { display: true, text: 'Weight (lbs)', font: { size: 11 }, color: '#8c9196' }, ticks: { font: { size: 10 }, color: '#8c9196' }, grid: { color: '#f1f2f4' } },
+        y1: { position: 'right', title: { display: true, text: 'Temp (°F)', font: { size: 11 }, color: '#8c9196' }, ticks: { font: { size: 10 }, color: '#8c9196' }, grid: { display: false } }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
